@@ -22,6 +22,9 @@ xor = foldr (/=) False
 map' :: (a -> b) -> [a] -> [b]
 map' f = foldr (\x y -> f x : y) []
 
+myFoldl :: (a -> b -> a) -> a -> [b] -> a
+myFoldl f base = foldr (flip f) base . reverse
+
 -- Helper
 
 insertTree :: a -> Tree a -> Tree a
