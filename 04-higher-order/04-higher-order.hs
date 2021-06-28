@@ -14,7 +14,22 @@ fun2' =
   iterate (\x -> if even x then x `div` 2 else 3 * x + 1)
 
 foldTree :: [a] -> Tree a
-foldTree = error "null"
+foldTree = foldr insertTree Leaf
+
+-- Helper
+
+insertTree :: a -> Tree a -> Tree a
+insertTree x Leaf = Node 0 Leaf x Leaf
+insertTree x (Node h l n r)
+  | leftHeight > rightHeight = Node h l n (insertTree x r)
+  | rightHeight > leftHeight = Node h (insertTree x l) n r
+  | otherwise = Node (max leftHeight (getTreeHeight (insertTree x r)) + 1) l n (insertTree x r)
+  where leftHeight = getTreeHeight l
+        rightHeight = getTreeHeight r
+
+getTreeHeight :: Tree a -> Integer
+getTreeHeight Leaf = 0
+getTreeHeight (Node h _ _ _) = h
 
 -- Supplied
 
