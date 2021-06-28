@@ -16,6 +16,9 @@ fun2' =
 foldTree :: [a] -> Tree a
 foldTree = foldr insertTree Leaf
 
+xor :: [Bool] -> Bool
+xor = foldr (/=) False
+
 -- Helper
 
 insertTree :: a -> Tree a -> Tree a
