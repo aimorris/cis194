@@ -1,3 +1,5 @@
+import Data.List ((\\))
+
 -- Main
 
 fun1' :: [Integer] -> Integer
@@ -24,6 +26,10 @@ map' f = foldr (\x y -> f x : y) []
 
 myFoldl :: (a -> b -> a) -> a -> [b] -> a
 myFoldl f base = foldr (flip f) base . reverse
+
+sieveSundaram :: Integer -> [Integer]
+sieveSundaram n = map (\x -> 2 * x + 1) $ [1..n] \\ exclusion
+  where exclusion = map (\(i, j) -> i + j + 2 * i * j) $ cartProd [1..n] [1..n]
 
 -- Helper
 
@@ -57,3 +63,6 @@ fun2 1 = 0
 fun2 n
   | even n = n + fun2 (n `div` 2)
   | otherwise = fun2 (3 * n + 1)
+
+cartProd :: [a] -> [b] -> [(a, b)]
+cartProd xs ys = [(x,y) | x <- xs, y <- ys]
