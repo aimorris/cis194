@@ -7,3 +7,6 @@ fib n = fib (n - 1) + fib (n - 2)
 
 fibs1 :: [Integer]
 fibs1 = map fib [1..]
+
+fibs2 :: [Integer]
+fibs2 = 0 : 1 : scanl (+) 1 (tail fibs2)
