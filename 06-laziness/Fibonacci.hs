@@ -45,3 +45,12 @@ largestBase2Exp lar exp n
 
 ruler :: Stream Integer
 ruler = streamMap (largestBase2Exp 0 0) nats
+
+-- Exercise 4 (no divisibility checking)
+
+interleaveStreams :: Stream a -> Stream a -> Stream a
+interleaveStreams (Cons a as) (Cons b bs) = Cons a $ Cons b $ interleaveStreams as bs
+
+-- Doesn't display
+ruler' :: Stream Integer
+ruler' = foldr1 interleaveStreams $ map streamRepeat [0..]
