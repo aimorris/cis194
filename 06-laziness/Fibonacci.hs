@@ -21,7 +21,7 @@ streamToList :: Stream a -> [a]
 streamToList (Cons a x) = a : streamToList x
 
 instance Show a => Show (Stream a) where
-  show (Cons a x) = show a ++ " : " ++ show x
+  show = show . take 20 . streamToList
 
 -- Exercise 4
 
@@ -33,3 +33,15 @@ streamMap f (Cons a x) = Cons (f a) (streamMap f x)
 
 streamFromSeed :: (a -> a) -> a -> Stream a
 streamFromSeed f a = Cons a $ streamFromSeed f $ f a
+
+nats :: Stream Integer
+nats = streamFromSeed (+ 1) 0
+
+largestBase2Exp :: Integer -> Integer -> Integer -> Integer
+largestBase2Exp lar exp n
+  | n < 2^exp = lar
+  | n `mod` 2^exp == 0 = largestBase2Exp exp (exp + 1) n
+  | otherwise = largestBase2Exp lar (exp + 1) n
+
+ruler :: Stream Integer
+ruler = streamMap (largestBase2Exp 0 0) nats
