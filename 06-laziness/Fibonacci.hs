@@ -22,7 +22,7 @@ fibs2 = 0 : 1 : scanl (+) 1 (tail fibs2)
 data Stream a = Cons a (Stream a)
 
 streamToList :: Stream a -> [a]
-streamToList (Cons a x) = a : streamToList x
+streamToList (Cons a as) = a : streamToList as
 
 instance Show a => Show (Stream a) where
   show = show . take 20 . streamToList
@@ -30,10 +30,10 @@ instance Show a => Show (Stream a) where
 -- Exercise 4
 
 streamRepeat :: a -> Stream a
-streamRepeat x = Cons x $ streamRepeat x
+streamRepeat y = Cons y $ streamRepeat y
 
 streamMap :: (a -> b) -> Stream a -> Stream b
-streamMap f (Cons a x) = Cons (f a) (streamMap f x)
+streamMap f (Cons a as) = Cons (f a) (streamMap f as)
 
 streamFromSeed :: (a -> a) -> a -> Stream a
 streamFromSeed f a = Cons a $ streamFromSeed f $ f a
@@ -44,10 +44,10 @@ nats :: Stream Integer
 nats = streamFromSeed (+ 1) 0
 
 largestBase2Exp :: Integer -> Integer -> Integer -> Integer
-largestBase2Exp lar exp n
-  | n < 2^exp = lar
-  | n `mod` 2^exp == 0 = largestBase2Exp exp (exp + 1) n
-  | otherwise = largestBase2Exp lar (exp + 1) n
+largestBase2Exp lar expon n
+  | n < 2^expon = lar
+  | n `mod` 2^expon == 0 = largestBase2Exp expon (expon + 1) n
+  | otherwise = largestBase2Exp lar (expon + 1) n
 
 ruler :: Stream Integer
 ruler = streamMap (largestBase2Exp 0 0) nats
