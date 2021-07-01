@@ -1,3 +1,7 @@
+{-# LANGUAGE FlexibleInstances #-}
+{-# OPTIONS_GHC -Wall #-}
+{-# OPTIONS_GHC -fno-warn-missing-methods #-}
+
 -- Exercise 1
 
 fib :: Integer -> Integer
@@ -34,6 +38,8 @@ streamMap f (Cons a x) = Cons (f a) (streamMap f x)
 streamFromSeed :: (a -> a) -> a -> Stream a
 streamFromSeed f a = Cons a $ streamFromSeed f $ f a
 
+-- Exercise 5
+
 nats :: Stream Integer
 nats = streamFromSeed (+ 1) 0
 
@@ -46,7 +52,7 @@ largestBase2Exp lar exp n
 ruler :: Stream Integer
 ruler = streamMap (largestBase2Exp 0 0) nats
 
--- Exercise 4 (no divisibility checking)
+-- Exercise 5 (no divisibility checking)
 
 interleaveStreams :: Stream a -> Stream a -> Stream a
 interleaveStreams (Cons a as) (Cons b bs) = Cons a $ Cons b $ interleaveStreams as bs
@@ -54,3 +60,14 @@ interleaveStreams (Cons a as) (Cons b bs) = Cons a $ Cons b $ interleaveStreams 
 -- Doesn't display
 ruler' :: Stream Integer
 ruler' = foldr1 interleaveStreams $ map streamRepeat [0..]
+
+-- Exercise 6
+
+x :: Stream Integer
+x = Cons 0 $ Cons 1 $ streamRepeat 0
+
+instance Num (Stream Integer) where
+  (+) (Cons a as) (Cons b bs) = Cons (a + b) $ (+) as bs
+  (*) (Cons a as) (Cons b bs) = Cons (a * b) $ streamMap (* a) bs + (*) as bs
+  fromInteger n = Cons n $ streamRepeat 0
+  negate (Cons a as) = Cons (negate a) $ negate as
