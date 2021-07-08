@@ -1,4 +1,5 @@
 {-# LANGUAGE GeneralizedNewtypeDeriving, FlexibleInstances #-}
+{-# OPTIONS_GHC -Wno-deferred-type-errors #-}
 module Sized where
 
 import Data.Monoid
