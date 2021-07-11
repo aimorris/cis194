@@ -27,6 +27,16 @@ indexJ i (Append m a b)
   | otherwise = indexJ (i - lengthA) b
   where lengthA = getSize (size $ tag a)
 
+dropJ :: (Sized b, Monoid b) => Int -> JoinList b a -> JoinList b a
+dropJ n a | n <= 0 = a
+dropJ _ Empty = Empty
+dropJ n (Single m _) = Empty
+dropJ n jl@(Append m a b)
+  | n == lengthA = b
+  | n < lengthA = Append m (dropJ n a) b
+  | otherwise = dropJ (n - lengthA) b
+  where lengthA = getSize (size $ tag a)
+
 -- Helper
 
 (!!?) :: [a] -> Int -> Maybe a
