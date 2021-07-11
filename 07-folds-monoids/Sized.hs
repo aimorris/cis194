@@ -29,4 +29,4 @@ instance Monoid Size where
   mappend = (+)
 
 instance Semigroup Size where
-    (Size m1) <> (Size m2) = Size (m1 + m2)
+  (Size m1) <> (Size m2) = Size (m1 + m2)
