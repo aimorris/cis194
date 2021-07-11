@@ -1,5 +1,8 @@
+{-# LANGUAGE FlexibleInstances #-}
+
 import Sized
 import Scrabble
+import Buffer
 
 data JoinList m a = Empty
                   | Single m a
@@ -49,8 +52,20 @@ takeJ n jl@(Append m a b)
   where lengthA = getSize (size $ tag a)
 
 -- Exercise 3
+
 scoreLine :: String -> JoinList Score String
 scoreLine = Single =<< scoreString
+
+-- Exercise 4
+
+instance Buffer (JoinList (Score, Size) String) where
+  toString = unlines . jlToList
+  fromString = foldl (\acc ln -> acc +++ Single (scoreString ln, 1) ln) Empty . lines
+  line = indexJ
+  replaceLine n ln buf = takeJ n buf +++ fromString ln +++ dropJ (n + 1) buf
+  numLines = length . jlToList
+  value = fromScore . fst . tag
+  
 
 -- Helper
 
