@@ -1,4 +1,5 @@
 import Sized
+import Scrabble
 
 data JoinList m a = Empty
                   | Single m a
@@ -46,6 +47,10 @@ takeJ n jl@(Append m a b)
   | n < lengthA = takeJ n a
   | otherwise = Append m a (takeJ (n - lengthA) b)
   where lengthA = getSize (size $ tag a)
+
+-- Exercise 3
+scoreLine :: String -> JoinList Score String
+scoreLine = Single =<< scoreString
 
 -- Helper
 
