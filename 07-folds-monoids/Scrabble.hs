@@ -47,3 +47,6 @@ scores = Map.fromList [
 
 score :: Char -> Score
 score = fromMaybe 0 . flip Map.lookup scores
+
+scoreString :: String -> Score
+scoreString = foldl (<>) (Score 0) . map score
