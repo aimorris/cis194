@@ -30,11 +30,21 @@ indexJ i (Append m a b)
 dropJ :: (Sized b, Monoid b) => Int -> JoinList b a -> JoinList b a
 dropJ n a | n <= 0 = a
 dropJ _ Empty = Empty
-dropJ n (Single m _) = Empty
+dropJ n (Single _ _) = Empty
 dropJ n jl@(Append m a b)
   | n == lengthA = b
   | n < lengthA = Append m (dropJ n a) b
   | otherwise = dropJ (n - lengthA) b
+  where lengthA = getSize (size $ tag a)
+
+takeJ :: (Sized b, Monoid b) => Int -> JoinList b a -> JoinList b a
+takeJ n _ | n <= 0 = Empty
+takeJ _ Empty = Empty
+takeJ n jl@(Single _ _) = jl
+takeJ n jl@(Append m a b)
+  | n == lengthA = a
+  | n < lengthA = takeJ n a
+  | otherwise = Append m a (takeJ (n - lengthA) b)
   where lengthA = getSize (size $ tag a)
 
 -- Helper
