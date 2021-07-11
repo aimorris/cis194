@@ -18,9 +18,40 @@ tag _ = mempty
 
 indexJ :: (Sized b, Monoid b) => Int -> JoinList b a -> Maybe a
 indexJ _ Empty = Nothing
-indexJ i (Single m a)
+indexJ i (Single _ a)
   | i == 0 = Just a
   | otherwise = Nothing
 indexJ i (Append m a b)
   | i < 0 = Nothing
-  | otherwise = if i > getSize (size m) then indexJ (i - 1) b else indexJ (i - 1) a
+  | i < lengthA = indexJ i a
+  | otherwise = indexJ (i - lengthA) b
+  where lengthA = getSize (size $ tag a)
+
+-- Helper
+
+(!!?) :: [a] -> Int -> Maybe a
+[] !!? _ = Nothing
+_ !!? i | i < 0 = Nothing
+(x:xs) !!? 0 = Just x
+(x:xs) !!? i = xs !!? (i-1)
+
+jlToList :: JoinList m a -> [a]
+jlToList Empty = []
+jlToList (Single _ a) = [a]
+jlToList (Append _ l1 l2) = jlToList l1 ++ jlToList l2
+
+test1 :: JoinList Size [Char]
+test1 = Append (Size 3)
+      (Append (Size 2)
+        (Single (Size 1) "first")
+        (Single (Size 1) "second")
+      )
+     (Single (Size 1) "third")
+
+test2 :: JoinList Size [Char]
+test2 = Single (Size 1) "first"
+
+test3 :: JoinList Size [Char]
+test3 = Append (Size 2)
+      (Single (Size 1) "first")
+      (Single (Size 1) "second")
