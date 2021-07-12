@@ -14,3 +14,6 @@ instance Monoid GuestList where
 
 instance Semigroup GuestList where
   (<>) (GL a b) (GL c d) = GL (a ++ c) (b + d) 
+
+moreFun :: GuestList -> GuestList -> GuestList
+moreFun a b = if a > b then a else b
