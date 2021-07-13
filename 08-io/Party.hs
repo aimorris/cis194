@@ -28,8 +28,10 @@ treeFold f acc tree = f (rootLabel tree) $ map (treeFold f acc) (subForest tree)
 
 nextLevel :: Employee -> [(GuestList, GuestList)] -> (GuestList, GuestList)
 nextLevel boss gls = (withBoss, withoutBoss)
-  where withoutBoss = maximum $ map fst gls
-        withBoss = maximum $ map (glCons boss . snd) gls
+  where withoutBoss = maximumGL $ map fst gls
+        withBoss = maximumGL $ map (glCons boss . snd) gls
+        maximumGL [] = mempty
+        maximumGL x = maximum x
 
 -- Exercise 4
 
