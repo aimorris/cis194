@@ -3,6 +3,7 @@
 module Party where
 
 import Employee ( GuestList(..), Employee(empFun) )
+import Data.Tree
 
 -- Exercise 1
 
@@ -17,3 +18,8 @@ instance Semigroup GuestList where
 
 moreFun :: GuestList -> GuestList -> GuestList
 moreFun a b = if a > b then a else b
+
+-- Exercise 2
+
+treeFold :: (b -> Tree a -> b) -> b -> Tree a -> b
+treeFold f acc tree = foldl f (f acc tree) $ subForest tree
