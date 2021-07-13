@@ -2,7 +2,7 @@
 
 module Party where
 
-import Employee ( GuestList(..), Employee(empFun) )
+import Employee ( GuestList(..), Employee(empFun, empName) )
 import Data.Tree
 
 -- Exercise 1
@@ -37,3 +37,13 @@ nextLevel boss gls = (withBoss, withoutBoss)
 
 maxFun :: Tree Employee -> GuestList
 maxFun = uncurry moreFun . treeFold nextLevel (mempty, mempty)
+
+-- Exercise 5
+
+formatOutput :: Tree Employee -> String
+formatOutput tree = "Total fun: " ++ show fun ++ "\n" ++ unlines names
+  where (GL emp fun) = maxFun tree
+        names = map empName emp
+
+main :: IO ()
+main = readFile "company.txt" >>= putStrLn . formatOutput . read
