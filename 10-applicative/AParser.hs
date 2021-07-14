@@ -7,6 +7,7 @@ module AParser where
 import           Control.Applicative
 
 import           Data.Char
+import Data.Maybe
 
 -- A parser for a value of type a is a function which takes a String
 -- represnting the input to be parsed, and succeeds or fails; if it
@@ -65,3 +66,16 @@ first f (a, c) = (f a, c)
 
 instance Functor Parser where
   fmap f (Parser x) = Parser $ fmap (first f) . x
+
+-- Exercise 2
+
+parserApply :: Parser (a -> b) -> Parser a -> String -> Maybe (b, String)
+parserApply p1 p2 x =
+  case runParser p1 x of
+    Nothing -> Nothing
+    Just (x, xs) -> fmap (first x) (runParser p2 xs)
+
+instance Applicative Parser where
+  pure a = Parser f
+    where f x = Just (a, x)
+  p1 <*> p2 = Parser $ parserApply p1 p2
